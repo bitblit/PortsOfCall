@@ -1,0 +1,58 @@
+{
+  "name": "@bitblit/ports-of-call",
+  "version": "0.0.0",
+  "description": "Serial device detector and wrapper",
+  "main": "./dist/index",
+  "typings": "./dist/index",
+  "files": [
+    "dist/index.js",
+    "dist/index.d.ts",
+    "dist/common"
+  ],
+  "contributors": [
+    "Christopher Weiss <bitblit@gmail.com>"
+  ],
+  "config": {},
+  "scripts": {
+    "prepublishOnly": "npm run compile",
+    "compile": "npm run clean && tsc",
+    "watch": "tsc -w .",
+    "clean": "rm -Rf dist",
+    "test": "mocha -r ts-node/register test/**/*.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bitblit/PortsOfCall"
+  },
+  "keywords": [
+    "serial",
+    "port",
+    "utility"
+  ],
+  "bugs": {
+    "url": "https://github.com/bitblit/PortsOfCall/issues"
+  },
+  "homepage": "https://github.com/bitblit/PortsOfCall#readme",
+  "engines": {
+    "node": ">=6.10.2"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@bitblit/ratchet": "0.0.39",
+    "serialport": "^6.1.1",
+    "gps": "^0.4.6",
+    "rxjs": "^5.5.10"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.2",
+    "@types/es6-promise": "^3.3.0",
+    "@types/mocha": "^5.0.0",
+    "@types/node": "9.6.7",
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "mocha": "^3.5.3",
+    "ts-node": "^3.3.0",
+    "tslint": "~5.7.0",
+    "typescript": "^2.8.3"
+  }
+}
