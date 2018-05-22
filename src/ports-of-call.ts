@@ -7,6 +7,7 @@ import {GpsDevice} from "./devices/gps/gps-device";
 import {Subscription} from "rxjs/Subscription";
 import {SerialDeviceState} from "./serial-device-state";
 import {SerialDeviceType} from "./serial-device-type";
+import {EchoDevice} from "./devices/echo/echo-device";
 
 export class PortsOfCall {
     private static _instance: PortsOfCall;
@@ -114,8 +115,30 @@ export class PortsOfCall {
 
     private createDeviceInstanceToTest(prevDevice:SerialDevice = null) : SerialDevice
     {
-        // For the moment its just GPS units
-        return new GpsDevice();
+        let devices = [new EchoDevice(), new GpsDevice()];
+        let rval : SerialDevice = null;
+
+        if (prevDevice==null)
+        {
+            rval = devices[0];
+        }
+        else
+        {
+            for (let i=0;i<devices.length && !rval;i++)
+            {
+                if (devices[i].deviceType()==prevDevice.deviceType())
+                {
+                    rval = devices[(i+1)%devices.length];
+                }
+            }
+            if (!rval)
+            {
+                Logger.warn("Should not happen - search did not find anything");
+                rval = devices[0];
+            }
+        }
+
+        return rval;
     }
 
     private listSerialPorts() : Promise<string[]>
@@ -149,6 +172,17 @@ export class PortsOfCall {
             }
         });
         return rval;
+    }
+
+    public firstDevice(typeFilter: SerialDeviceType) : SerialDevice
+    {
+        if (typeFilter==null)
+        {
+            throw "You must set a type filter";
+        }
+        let devices : SerialDevice[] = this.devices(typeFilter);
+
+        return (devices.length==0)?null:devices[0];
     }
 
 }

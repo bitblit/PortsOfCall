@@ -1,11 +1,11 @@
 //    Wraps up reading any gps data
 import {Logger} from "@bitblit/ratchet/dist/common/logger";
 import * as serialport from "serialport";
-import {SerialDevice} from "../../serial-device";
+import {SerialDevice} from "../serial-device";
 import {Observable} from "rxjs/Rx";
-import {SerialDeviceState} from "../../serial-device-state";
+import {SerialDeviceState} from "../serial-device-state";
 import {Subscription} from "rxjs/Subscription";
-import {SerialDeviceType} from "../../serial-device-type";
+import {SerialDeviceType} from "../serial-device-type";
 
 export class AbstractSerialDevice implements SerialDevice{
     private port: any;
@@ -64,6 +64,7 @@ export class AbstractSerialDevice implements SerialDevice{
 
     updateState(tick:number) : void {
         Logger.silly("Updating state, cur: %s, tick: %d",this.myState, tick);
+        this.onTick(tick);
         let now : number = new Date().getTime();
         switch (this.myState)
         {
@@ -71,9 +72,7 @@ export class AbstractSerialDevice implements SerialDevice{
             case SerialDeviceState.OPENING :
                 if (this.port && this.port.portIsOpen)
                 {
-                    Logger.debug("Port opened : %s",this.portName());
-                    this.testingStarted = new Date().getTime();
-                    this.myState = SerialDeviceState.TESTING;
+                    this.__startTesting();
                 }
                 else if (now-this.timeStarted>5000)
                 {
@@ -119,6 +118,12 @@ export class AbstractSerialDevice implements SerialDevice{
         }
     }
 
+    onTick(tick:number) : void
+    {
+        // Override me in subclass if you need to do something interesting
+    }
+
+
     deviceMatchesPort() : boolean
     {
         return false; // override me in the subclass
@@ -160,13 +165,18 @@ export class AbstractSerialDevice implements SerialDevice{
         this.myState = SerialDeviceState.OPENING;
     }
 
+    private __startTesting()
+    {
+        Logger.debug("Port opened : %s, starting testing",this.portName());
+        this.testingStarted = new Date().getTime();
+        this.myState = SerialDeviceState.TESTING;
+    }
+
     onOpen(): any {
         Logger.info("%s:Open:%s", this.deviceType(),this.portName());
         if (this.myState==SerialDeviceState.OPENING)
         {
-            Logger.debug("Port opened : %s",this.portName());
-            this.testingStarted = new Date().getTime();
-            this.myState = SerialDeviceState.TESTING;
+            this.__startTesting();
         }
     }
 
@@ -200,6 +210,10 @@ export class AbstractSerialDevice implements SerialDevice{
         return this.lastError;
     }
 
+    getPort() : any
+    {
+        return this.port;
+    }
 
 
 }

@@ -1,7 +1,7 @@
 //    Wraps up reading any gps data
 import {Logger} from "@bitblit/ratchet/dist/common/logger";
 import * as serialport from "serialport";
-import {AbstractSerialDevice} from "./abstract-serial-device";
+import {AbstractSerialDevice} from "../abstract-serial-device";
 import * as GPS from 'gps';
 import {SerialDeviceType} from "../../serial-device-type";
 import {SerialDeviceState} from "../../serial-device-state";
