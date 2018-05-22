@@ -14,7 +14,7 @@ export class EchoDevice extends AbstractSerialDevice{
         super();
 
         let parser: any = new serialport['parsers'].Readline({
-            delimiter: '\n'
+            delimiter: '\r\n'
         });
 
         this.setParser(parser);
@@ -47,7 +47,8 @@ export class EchoDevice extends AbstractSerialDevice{
         return false;
     }
 
-    onData(data: string): any {
+    onData(inData: string): any {
+        let data : string = inData.trim();
         if (this.echoState=='NEW')
         {
             // When new, I'm only looking for one piece of text
@@ -58,7 +59,7 @@ export class EchoDevice extends AbstractSerialDevice{
             }
             else
             {
-                Logger.debug("Ignoring data %s - may not be a echo device");
+                Logger.debug("Ignoring data %s - may not be a echo device",data);
             }
         }
         else
