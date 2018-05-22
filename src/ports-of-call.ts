@@ -5,12 +5,19 @@ import * as serialport from "serialport";
 import {SerialDevice} from "./serial-device";
 import {GpsDevice} from "./devices/gps/gps-device";
 import {Subscription} from "rxjs/Subscription";
+import {SerialDeviceState} from "./serial-device-state";
+import {SerialDeviceType} from "./serial-device-type";
 
 export class PortsOfCall {
     private static _instance: PortsOfCall;
     private static ONE_MINUTE: number = 1000 * 60;
+    private static PING_RATE: number = 500;
     private checkupTimer: Observable<number>;
     private checkupSubscription : Subscription;
+
+    private pingTimer: Observable<number>;
+    private pingSubscription : Subscription;
+
     private lastCheckup : Date;
 
     private portsInUse : any = {};
@@ -19,7 +26,14 @@ export class PortsOfCall {
         Logger.info("Created PortsOfCall - starting timer");
 
         this.checkupTimer = Observable.timer(0, PortsOfCall.ONE_MINUTE);
-        this.checkupSubscription = this.checkupTimer.subscribe(t => {this.recheckPorts(t).catch(err=>{Logger.error("Error testing ports : %s",err)})});
+        this.checkupSubscription = this.checkupTimer.subscribe(t => {
+            this.recheckPorts(t)
+        });
+
+        this.pingTimer = Observable.timer(0, PortsOfCall.PING_RATE);
+        this.pingSubscription = this.pingTimer.subscribe(t => {
+            // For the moment do nothing
+        });
     }
 
     public static get Instance(): PortsOfCall {
@@ -33,11 +47,75 @@ export class PortsOfCall {
     {
         Logger.info("Aborting ports of call");
         this.checkupSubscription.unsubscribe();
+        this.pingSubscription.unsubscribe();
+
+        Logger.info("Shutting down all ports");
+        Object.keys(this.portsInUse).forEach(k=>{
+            this.portsInUse[k].cleanShutdown();
+        });
     }
 
     public get status() : string
     {
-        return "Current time : "+new Date()+" Checkup : "+this.lastCheckup;
+        let devices : SerialDevice[] = this.devices();
+
+        let rval : string = new Date()+" : "+this.devices.length+" active devices";
+
+        devices.forEach(d=>{
+            rval+='\n\n'+d.summary();
+        });
+        return rval;
+    }
+
+    private recheckPorts(tick:number) : void
+    {
+        this.lastCheckup = new Date();
+
+        Logger.info("Searching for serial ports");
+
+        this.listSerialPorts().then(ports=>{
+            Logger.info('Found %d serial ports', ports.length);
+                if (ports.length == 0) {
+                    Logger.info("No serial ports found");
+                    return null;
+                }
+                else {
+                    Logger.info("Checking %d ports", ports.length);
+
+                    ports.forEach(p => {
+                        let current: SerialDevice = this.portsInUse[p];
+
+                        if (!current || this.deadState(current.currentState())) {
+                            Logger.debug("Replacing device on %s (was %s)", p, current);
+                            let testDevice = this.createDeviceInstanceToTest(current);
+                            testDevice.initialize(p, this.pingTimer);
+                            this.portsInUse[p] = testDevice;
+                        }
+                    });
+                }
+        }).catch(err=>{
+            Logger.warn("Outer err : %s",err);
+        });
+    }
+
+    private deadState(state:SerialDeviceState) : boolean
+    {
+        return state==SerialDeviceState.STALLED ||
+            state==SerialDeviceState.ERROR ||
+            state==SerialDeviceState.FAIL;
+    }
+
+    private waitState(state:SerialDeviceState) : boolean
+    {
+        return state==SerialDeviceState.NEW ||
+            state==SerialDeviceState.OPENING ||
+            state==SerialDeviceState.TESTING;
+    }
+
+    private createDeviceInstanceToTest(prevDevice:SerialDevice = null) : SerialDevice
+    {
+        // For the moment its just GPS units
+        return new GpsDevice();
     }
 
     private listSerialPorts() : Promise<string[]>
@@ -57,62 +135,20 @@ export class PortsOfCall {
         });
     }
 
-    private recheckPorts(tick:number) : Promise<any>
+    public devices(typeFilter: SerialDeviceType = null) : SerialDevice[]
     {
-        this.lastCheckup = new Date();
-
-        Logger.info("Searching for serial ports");
-
-        return this.listSerialPorts().then(ports=>{
-            Logger.info('Found %d serial ports', ports.length);
-                if (ports.length == 0) {
-                    Logger.info("No serial ports found");
-                    return null;
+        let rval : SerialDevice[] = [];
+        Object.keys(this.portsInUse).forEach(key=>{
+            let value : SerialDevice = this.portsInUse[key];
+            if (value && value.currentState()==SerialDeviceState.OK)
+            {
+                if (typeFilter==null || typeFilter==value.deviceType())
+                {
+                    rval.push(value);
                 }
-                else {
-                    Logger.info("Creating wrappers");
-                    let promiseArr : Promise<SerialDevice>[] = ports.map(p=>{
-                        let current : SerialDevice = this.portsInUse[p];
-                        if (current!=null)
-                        {
-                            Logger.info("Skipping %s, already open", p);
-                            return Promise.resolve(current);
-                        }
-                        else
-                        {
-                            return this.testDevices(p)
-                        }
-                    });
-                    return Promise.all(promiseArr).catch(err2=>{Logger.warn("Err2:"+err2)});
-                }
-
-        }).catch(err=>{
-            Logger.warn("Outer err : %s",err);
+            }
         });
-    }
-
-    private testDevices(portName:string, idx:number=0) : Promise<SerialDevice>
-    {
-        let device : SerialDevice = null;
-        switch (idx)
-        {
-            case 0 : device = new GpsDevice();break;
-            default : Logger.info("No more devices to test, quitting search"); return Promise.resolve(null);
-        }
-
-        return device.test(portName).then(result=>{
-            if (result)
-            {
-                Logger.info("Found device %s on %s, returning", device.deviceType(), portName);
-                return device;
-            }
-            else
-            {
-                Logger.info("%s is not a %s, closing and moving on",portName, device.deviceType());
-                device.cleanClose();
-                return this.testDevices(portName, idx+1);
-            }
-        })
+        return rval;
     }
 
 }

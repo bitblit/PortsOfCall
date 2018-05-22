@@ -40,7 +40,7 @@
   "dependencies": {
     "@bitblit/ratchet": "0.0.39",
     "serialport": "^6.1.1",
-    "gps": "^0.4.6",
+    "gps": "^0.4.7",
     "rxjs": "^5.5.10"
   },
   "devDependencies": {
