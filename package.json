@@ -7,7 +7,10 @@
   "files": [
     "dist/index.js",
     "dist/index.d.ts",
-    "dist/common"
+    "dist/ports-of-call.js",
+    "dist/ports-of-call.d.js",
+    "dist/devices",
+    "dist/model"
   ],
   "contributors": [
     "Christopher Weiss <bitblit@gmail.com>"

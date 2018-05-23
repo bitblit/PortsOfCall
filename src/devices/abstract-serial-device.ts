@@ -1,11 +1,11 @@
 //    Wraps up reading any gps data
 import {Logger} from "@bitblit/ratchet/dist/common/logger";
 import * as serialport from "serialport";
-import {SerialDevice} from "../serial-device";
+import {SerialDevice} from "../model/serial-device";
 import {Observable} from "rxjs/Rx";
-import {SerialDeviceState} from "../serial-device-state";
+import {SerialDeviceState} from "../model/serial-device-state";
 import {Subscription} from "rxjs/Subscription";
-import {SerialDeviceType} from "../serial-device-type";
+import {SerialDeviceType} from "../model/serial-device-type";
 
 export class AbstractSerialDevice implements SerialDevice{
     private port: any;

@@ -1,8 +1,8 @@
 import {Logger} from "@bitblit/ratchet/dist/common/logger";
 import * as serialport from "serialport";
 import {AbstractSerialDevice} from "../abstract-serial-device";
-import {SerialDeviceType} from "../../serial-device-type";
-import {SerialDeviceState} from "../../serial-device-state";
+import {SerialDeviceType} from "../../model/serial-device-type";
+import {SerialDeviceState} from "../../model/serial-device-state";
 
 export class EchoDevice extends AbstractSerialDevice{
     public static FLAG_TEXT : string='THIS IS A TEST';

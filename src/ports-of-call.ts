@@ -2,12 +2,12 @@
 import {Logger} from "@bitblit/ratchet/dist/common/logger";
 import {Observable} from "rxjs";
 import * as serialport from "serialport";
-import {SerialDevice} from "./serial-device";
+import {SerialDevice} from "./model/serial-device";
 import {GpsDevice} from "./devices/gps/gps-device";
 import {Obd2Device} from "./devices/obd/obd2-device";
 import {Subscription} from "rxjs/Subscription";
-import {SerialDeviceState} from "./serial-device-state";
-import {SerialDeviceType} from "./serial-device-type";
+import {SerialDeviceState} from "./model/serial-device-state";
+import {SerialDeviceType} from "./model/serial-device-type";
 import {EchoDevice} from "./devices/echo/echo-device";
 
 export class PortsOfCall {
