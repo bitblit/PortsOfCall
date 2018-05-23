@@ -4,6 +4,7 @@ import {Observable} from "rxjs";
 import * as serialport from "serialport";
 import {SerialDevice} from "./serial-device";
 import {GpsDevice} from "./devices/gps/gps-device";
+import {Obd2Device} from "./devices/obd/obd2-device";
 import {Subscription} from "rxjs/Subscription";
 import {SerialDeviceState} from "./serial-device-state";
 import {SerialDeviceType} from "./serial-device-type";
@@ -115,7 +116,7 @@ export class PortsOfCall {
 
     private createDeviceInstanceToTest(prevDevice:SerialDevice = null) : SerialDevice
     {
-        let devices = [new EchoDevice(), new GpsDevice()];
+        let devices = [new Obd2Device(), new GpsDevice()];//,new EchoDevice()];
         let rval : SerialDevice = null;
 
         if (prevDevice==null)

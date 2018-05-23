@@ -30,7 +30,7 @@ export class AbstractSerialDevice implements SerialDevice{
 
     cleanShutdown() : void {
         Logger.debug("Performing clean shutdown of port %s",this.portName());
-        debugger;
+        //debugger;
         try {
             this.port.close();
         }
@@ -134,14 +134,19 @@ export class AbstractSerialDevice implements SerialDevice{
         return false; // override me in the subclass
     }
 
-    initialize(portName:string, ping:Observable<number>): void
+    portConfig() : any
     {
-        this.port = new serialport(portName, {
+        return {
             baudRate: 9600,
             dataBits: 8,
             stopBits: 1
             //parity: 'None'
-        });
+        };
+    }
+
+    initialize(portName:string, ping:Observable<number>): void
+    {
+        this.port = new serialport(portName, this.portConfig());
 
         this.port.on('open', ()=>this.onOpen());
         this.port.on('close', ()=>this.onClose());
