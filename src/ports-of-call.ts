@@ -12,8 +12,8 @@ import {EchoDevice} from "./devices/echo/echo-device";
 
 export class PortsOfCall {
     private static _instance: PortsOfCall;
-    private static ONE_MINUTE: number = 1000 * 60;
-    private static PING_RATE: number = 500;
+    private static DEFAULT_CHECKUP_RATE: number = 1000 * 15;
+    private static DEFAULT_PING_RATE: number = 500;
     private checkupTimer: Observable<number>;
     private checkupSubscription : Subscription;
 
@@ -27,12 +27,12 @@ export class PortsOfCall {
     private constructor() {
         Logger.info("Created PortsOfCall - starting timer");
 
-        this.checkupTimer = Observable.timer(0, PortsOfCall.ONE_MINUTE);
+        this.checkupTimer = Observable.timer(0, PortsOfCall.DEFAULT_CHECKUP_RATE);
         this.checkupSubscription = this.checkupTimer.subscribe(t => {
             this.recheckPorts(t)
         });
 
-        this.pingTimer = Observable.timer(0, PortsOfCall.PING_RATE);
+        this.pingTimer = Observable.timer(0, PortsOfCall.DEFAULT_PING_RATE);
         this.pingSubscription = this.pingTimer.subscribe(t => {
             // For the moment do nothing
         });
@@ -59,11 +59,11 @@ export class PortsOfCall {
 
     public get status() : string
     {
-        let devices : SerialDevice[] = this.devices();
+        let activeDevices : SerialDevice[] = this.devices();
 
-        let rval : string = new Date()+" : "+this.devices.length+" active devices";
+        let rval : string = new Date()+" : "+this.devices.length+" ports "+activeDevices.length+" ready devices";
 
-        devices.forEach(d=>{
+        activeDevices.forEach(d=>{
             rval+='\n\n'+d.summary();
         });
         return rval;
