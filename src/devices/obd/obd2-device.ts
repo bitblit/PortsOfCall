@@ -3,6 +3,7 @@ import * as serialport from "serialport";
 import {AbstractSerialDevice} from "../abstract-serial-device";
 import {SerialDeviceType} from "../../model/serial-device-type";
 import {SerialDeviceState} from "../../model/serial-device-state";
+import {VehicleState} from "./vehicle-state";
 
 export class Obd2Device extends AbstractSerialDevice{
     private static SPEED_CMD: string = "010D\r\n";
@@ -203,13 +204,13 @@ export class Obd2Device extends AbstractSerialDevice{
         return rval;
     }
 
-    public speedData() : any
+    public vehicleState() : VehicleState
     {
         return {
             speedInMph:this.speedInMph,
             updated:this.speedUpdated,
             timestamp:new Date().getTime()
-        };
+        } as VehicleState;
     }
 }
 
