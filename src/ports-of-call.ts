@@ -49,16 +49,18 @@ export class PortsOfCall {
         return this._instance;
     }
 
-    public start() : void
+    public start() : PortsOfCall
     {
         Logger.info("Starting Ports-Of-Call ping");
         this.paused = false;
+        return this;
     }
 
-    public pause() : void
+    public pause() : PortsOfCall
     {
         Logger.info("Pausing Ports-Of-Call ping");
         this.paused = true;
+        return this;
     }
 
 
