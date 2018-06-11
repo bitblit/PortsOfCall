@@ -21,15 +21,19 @@ export class PortsOfCall {
     private pingSubscription : Subscription;
 
     private lastCheckup : Date;
+    private paused : boolean = true;
 
     private portsInUse : any = {};
 
     private constructor() {
-        Logger.info("Created PortsOfCall - starting timer");
+        Logger.info("Created PortsOfCall");
 
         this.checkupTimer = Observable.timer(0, PortsOfCall.DEFAULT_CHECKUP_RATE);
         this.checkupSubscription = this.checkupTimer.subscribe(t => {
-            this.recheckPorts(t)
+            if (!this.paused)
+            {
+                this.recheckPorts(t);
+            }
         });
 
         this.pingTimer = Observable.timer(0, PortsOfCall.DEFAULT_PING_RATE);
@@ -44,6 +48,19 @@ export class PortsOfCall {
         }
         return this._instance;
     }
+
+    public start() : void
+    {
+        Logger.info("Starting Ports-Of-Call ping");
+        this.paused = false;
+    }
+
+    public pause() : void
+    {
+        Logger.info("Pausing Ports-Of-Call ping");
+        this.paused = true;
+    }
+
 
     public abort() : void
     {
