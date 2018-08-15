@@ -42,7 +42,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@bitblit/ratchet": "0.0.39",
-    "serialport": "^6.2.1",
+    "serialport": "^6.2.2",
     "gps": "^0.4.7",
     "rxjs": "^5.5.10"
   },
