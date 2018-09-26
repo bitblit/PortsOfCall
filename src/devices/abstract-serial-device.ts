@@ -190,7 +190,7 @@ export class AbstractSerialDevice implements SerialDevice{
     }
 
     onClose(): any {
-        Logger.info("%s:Close", this.deviceType());
+        Logger.info("%s:Close:%s", this.deviceType(), this.portName());
     }
 
     onError(error: any): any {

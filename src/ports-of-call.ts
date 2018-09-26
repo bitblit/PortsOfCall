@@ -109,17 +109,19 @@ export class PortsOfCall {
                     return null;
                 }
                 else {
-                    Logger.info("Checking %d ports", ports.length);
-
-                    ports.forEach(p => {
+                    const portsToCheck: any[] = ports.filter( p => {
                         let current: SerialDevice = this.portsInUse[p];
+                        return (!current || this.deadState(current.currentState()));
+                    })
 
-                        if (!current || this.deadState(current.currentState())) {
-                            Logger.debug("Replacing device on %s (was %s)", p, current);
-                            let testDevice = this.createDeviceInstanceToTest(current);
-                            testDevice.initialize(p, this.pingTimer);
-                            this.portsInUse[p] = testDevice;
-                        }
+                    Logger.info("Checking %d ports", portsToCheck.length);
+
+                    portsToCheck.forEach(p => {
+                        let current: SerialDevice = this.portsInUse[p];
+                        Logger.debug("Replacing device on %s (was %s)", p, current);
+                        let testDevice = this.createDeviceInstanceToTest(current);
+                        testDevice.initialize(p, this.pingTimer);
+                        this.portsInUse[p] = testDevice;
                     });
                 }
         }).catch(err=>{
