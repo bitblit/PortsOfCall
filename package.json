@@ -41,10 +41,10 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@bitblit/ratchet": "0.0.79",
-    "serialport": "^6.2.2",
-    "gps": "^0.4.7",
-    "rxjs": "^5.5.11"
+    "@bitblit/ratchet": "0.0.87",
+    "serialport": "7.0.2",
+    "gps": "0.4.7",
+    "rxjs": "5.5.11"
   },
   "devDependencies": {
     "@types/chai": "^4.1.2",

@@ -42,7 +42,7 @@ export class GpsDevice extends AbstractSerialDevice{
     {
         Logger.silly("Received GPS data>%j %j",data, this.gps.state);
         this.lastUpdate = new Date();
-        this.timeError = this.lastUpdate.getTime()-this.gps.state.time.getTime();
+        this.timeError = (this.gps.state.time)?this.lastUpdate.getTime()-this.gps.state.time.getTime():null;
     }
 
     deviceType(): SerialDeviceType {

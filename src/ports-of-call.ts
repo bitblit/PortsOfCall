@@ -1,5 +1,4 @@
 //    Wraps up reading any gps data
-import {Logger} from "@bitblit/ratchet/dist/common/logger";
 import {Observable} from "rxjs";
 import * as serialport from "serialport";
 import {SerialDevice} from "./model/serial-device";
@@ -8,7 +7,8 @@ import {Obd2Device} from "./devices/obd/obd2-device";
 import {Subscription} from "rxjs/Subscription";
 import {SerialDeviceState} from "./model/serial-device-state";
 import {SerialDeviceType} from "./model/serial-device-type";
-import {EchoDevice} from "./devices/echo/echo-device";
+import {Logger} from '@bitblit/ratchet/dist/common/logger';
+import {LogSnapshot} from '@bitblit/ratchet/dist/common/log-snapshot';
 
 export class PortsOfCall {
     private static _instance: PortsOfCall;
@@ -47,6 +47,14 @@ export class PortsOfCall {
             this._instance = new PortsOfCall();
         }
         return this._instance;
+    }
+
+    public logSnapshot() : LogSnapshot {
+        return Logger.takeSnapshot()
+    }
+
+    public setLogLevel(newLevel: string): void {
+        Logger.setLevelByName(newLevel);
     }
 
     public start() : PortsOfCall
