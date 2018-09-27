@@ -19,7 +19,7 @@
   "scripts": {
     "prepublishOnly": "npm run compile",
     "compile": "npm run clean && tsc",
-    "compile-win": "npm run clean && tsc",
+    "compile-win": "npm run clean-win && tsc",
     "watch": "tsc -w .",
     "clean": "rm -Rf dist",
     "clean-win": "if exist dist rmdir /q /s dist",
