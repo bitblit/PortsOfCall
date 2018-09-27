@@ -90,11 +90,12 @@ export class PortsOfCall {
 
         let rval : string = new Date()+" : "+this.devices.length+" ports";
         rval += (this.paused)? " PAUSED" : " RUNNING";
-        rval += activeDevices.length+" ready devices";
+        rval += " "+activeDevices.length+" ready devices";
 
         activeDevices.forEach(d=>{
             rval+='\n\n'+d.summary();
         });
+
         return rval;
     }
 
