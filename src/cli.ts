@@ -9,6 +9,8 @@ import {SerialDeviceType} from "./model/serial-device-type";
 
 process.env['DEBUG'] = 'serialport:main node myapp.js';
 
+Logger.setLevelByName('debug');
+
 let timer : Observable<number> = Observable.timer(0,5000);
 
 let poc : PortsOfCall = PortsOfCall.Instance;
