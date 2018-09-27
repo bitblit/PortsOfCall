@@ -21,7 +21,8 @@
     "compile": "npm run clean && tsc",
     "watch": "tsc -w .",
     "clean": "rm -Rf dist",
-    "test": "mocha -r ts-node/register test/**/*.ts"
+    "test": "mocha -r ts-node/register test/**/*.ts",
+    "cli": "npm run compile && node dist/cli"
   },
   "repository": {
     "type": "git",
