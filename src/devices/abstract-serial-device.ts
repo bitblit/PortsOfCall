@@ -109,7 +109,7 @@ export class AbstractSerialDevice implements SerialDevice{
             case SerialDeviceState.OK:
                 if (this.deviceIsStalled())
                 {
-                    Logger.warn("Device %s is stalled - closing up");
+                    Logger.warn("Device %s is stalled - closing up", this.portName());
                     this.cleanShutdown();
                     this.myState = SerialDeviceState.STALLED;
                 }
