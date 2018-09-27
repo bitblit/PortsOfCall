@@ -19,10 +19,13 @@
   "scripts": {
     "prepublishOnly": "npm run compile",
     "compile": "npm run clean && tsc",
+    "compile-win": "npm run clean && tsc",
     "watch": "tsc -w .",
     "clean": "rm -Rf dist",
+    "clean-win": "if exist dist rmdir /q /s dist",
     "test": "mocha -r ts-node/register test/**/*.ts",
-    "cli": "npm run compile && node dist/cli"
+    "cli": "npm run compile && node dist/cli",
+    "cli-win": "npm run compile-win && node dist/cli"
   },
   "repository": {
     "type": "git",
@@ -42,7 +45,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@bitblit/ratchet": "0.0.87",
+    "@bitblit/ratchet": "0.0.89",
     "serialport": "7.0.2",
     "gps": "0.4.7",
     "rxjs": "5.5.11"
