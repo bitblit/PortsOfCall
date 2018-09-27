@@ -24,6 +24,7 @@ export class PortsOfCall {
     private paused : boolean = true;
 
     private portsInUse : any = {};
+    private latestPortList: string[] = null;
 
     private constructor() {
         Logger.info("Created PortsOfCall");
@@ -84,17 +85,22 @@ export class PortsOfCall {
         });
     }
 
-    public get status() : string
+    public status(includeSummary: boolean = false) : string
     {
         let activeDevices : SerialDevice[] = this.devices();
+        const portCount: number = (this.latestPortList)?this.latestPortList.length:-1;
 
-        let rval : string = new Date()+" : "+this.devices.length+" ports";
+        let rval : string = new Date().toLocaleTimeString();
         rval += (this.paused)? " PAUSED" : " RUNNING";
-        rval += " "+activeDevices.length+" ready devices";
+        rval += " Bound "+activeDevices.length+" of "+portCount+" ports";
 
-        activeDevices.forEach(d=>{
-            rval+='\n\n'+d.summary();
-        });
+        if (activeDevices.length>0) {
+            rval += " : Devices : ";
+            activeDevices.forEach(d=>{
+                rval += (includeSummary) ? "\n\n"+d.summary() : " "+d.deviceType();
+            });
+        }
+
 
         return rval;
     }
@@ -185,6 +191,7 @@ export class PortsOfCall {
                 else
                 {
                     let names : string[] = ports.map(p=>p.comName);
+                    this.latestPortList = names;
                     resolve(names);
                 }
             });

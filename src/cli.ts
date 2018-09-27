@@ -19,7 +19,7 @@ let poc : PortsOfCall = PortsOfCall.Instance;
 poc.start();
 
 let sub : Subscription = timer.subscribe((t)=>{
-   Logger.info("Timer : %s",poc.status);
+   Logger.info("Timer : %s",poc.status());
 
    let gps : GpsDevice = poc.firstDevice(SerialDeviceType.GPS) as GpsDevice;
    if (gps) {

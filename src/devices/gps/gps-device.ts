@@ -6,6 +6,8 @@ import * as GPS from 'gps';
 import {SerialDeviceType} from "../../model/serial-device-type";
 import {SerialDeviceState} from "../../model/serial-device-state";
 import {GpsState} from "./gps-state";
+import {ExtGpsState} from './ext-gps-state';
+import moment = require('moment');
 
 export class GpsDevice extends AbstractSerialDevice{
     private gps : GPS;
@@ -29,7 +31,8 @@ export class GpsDevice extends AbstractSerialDevice{
     {
         if (this.currentState()==SerialDeviceState.OK)
         {
-            return "GPS TE:"+this.timeError+"ms Location : "+JSON.stringify(this.currentGpsState());
+            const state: GpsState = this.currentGpsState();
+            return "GPS TE:"+this.timeError+"ms Location : "+state.lat + " x "+state.lon+")";
         }
         else
         {
@@ -66,9 +69,17 @@ export class GpsDevice extends AbstractSerialDevice{
         this.handleGPSData(data);
     }
 
-    currentGpsState() : GpsState
+    currentGpsState() : ExtGpsState
     {
-        return (this.currentState()==SerialDeviceState.OK)?this.gps.state as GpsState:null;
+        const rval: ExtGpsState = (this.currentState()==SerialDeviceState.OK)?this.gps.state as ExtGpsState:null;
+        try {
+            if (rval && rval.time) {
+                rval.timestampEpochMS = moment(rval.time).toDate().getTime();
+            }
+        } catch (err) {
+            Logger.debug('Error parsing time : %s',err);
+        }
+        return rval;
     }
 
 }
