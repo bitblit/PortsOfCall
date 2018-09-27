@@ -88,7 +88,9 @@ export class PortsOfCall {
     {
         let activeDevices : SerialDevice[] = this.devices();
 
-        let rval : string = new Date()+" : "+this.devices.length+" ports "+activeDevices.length+" ready devices";
+        let rval : string = new Date()+" : "+this.devices.length+" ports";
+        rval += (this.paused)? " PAUSED" : " RUNNING";
+        rval += activeDevices.length+" ready devices";
 
         activeDevices.forEach(d=>{
             rval+='\n\n'+d.summary();
