@@ -10,6 +10,7 @@ import {ExtGpsState} from './ext-gps-state';
 import moment = require('moment');
 
 export class GpsDevice extends AbstractSerialDevice{
+    private lastValid: ExtGpsState;
     private gps : GPS;
     private lastUpdate : Date;
     private timeError: number;
@@ -69,17 +70,21 @@ export class GpsDevice extends AbstractSerialDevice{
         this.handleGPSData(data);
     }
 
-    currentGpsState() : ExtGpsState
+    currentGpsState(includeInvalid: boolean = false) : ExtGpsState
     {
-        const rval: ExtGpsState = (this.currentState()==SerialDeviceState.OK)?this.gps.state as ExtGpsState:null;
+        const temp: ExtGpsState = (this.currentState()==SerialDeviceState.OK)?this.gps.state as ExtGpsState:null;
         try {
-            if (rval && rval.time) {
-                rval.timestampEpochMS = moment(rval.time).toDate().getTime();
+            if (temp && temp.time) {
+                temp.timestampEpochMS = moment(temp.time).toDate().getTime();
+            }
+            if (temp.lat && temp.lon) {
+                this.lastValid = temp;
             }
         } catch (err) {
             Logger.debug('Error parsing time : %s',err);
         }
-        return rval;
+
+        return (includeInvalid)?temp:this.lastValid;
     }
 
 }
