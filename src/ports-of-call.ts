@@ -4,7 +4,7 @@ import * as serialport from "serialport";
 import {SerialDevice} from "./model/serial-device";
 import {GpsDevice} from "./devices/gps/gps-device";
 import {Obd2Device} from "./devices/obd/obd2-device";
-import {Subscription} from "rxjs/Subscription";
+import {Subscription, timer} from "rxjs";
 import {SerialDeviceState} from "./model/serial-device-state";
 import {SerialDeviceType} from "./model/serial-device-type";
 import {Logger} from '@bitblit/ratchet/dist/common/logger';
@@ -29,7 +29,7 @@ export class PortsOfCall {
     private constructor() {
         Logger.info("Created PortsOfCall");
 
-        this.checkupTimer = Observable.timer(0, PortsOfCall.DEFAULT_CHECKUP_RATE);
+        this.checkupTimer = timer(0, PortsOfCall.DEFAULT_CHECKUP_RATE);
         this.checkupSubscription = this.checkupTimer.subscribe(t => {
             if (!this.paused)
             {
@@ -37,7 +37,7 @@ export class PortsOfCall {
             }
         });
 
-        this.pingTimer = Observable.timer(0, PortsOfCall.DEFAULT_PING_RATE);
+        this.pingTimer = timer(0, PortsOfCall.DEFAULT_PING_RATE);
         this.pingSubscription = this.pingTimer.subscribe(t => {
             // For the moment do nothing
         });

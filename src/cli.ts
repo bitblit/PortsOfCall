@@ -1,9 +1,8 @@
 // Note: THIS FILE IS NOT CHECKED INTO GITHUB, SO PASSWORDS ARE OK HERE
 
 import {PortsOfCall} from './ports-of-call';
-import {Observable} from 'rxjs/Rx';
+import {Observable, Subscription, timer} from 'rxjs';
 import {Logger} from '@bitblit/ratchet/dist/common/logger';
-import {Subscription} from 'rxjs/Subscription';
 import {EchoDevice} from './devices/echo/echo-device';
 import {SerialDeviceType} from './model/serial-device-type';
 import {GpsDevice} from './devices/gps/gps-device';
@@ -13,12 +12,12 @@ process.env['DEBUG'] = 'serialport:main node myapp.js';
 
 Logger.setLevelByName('debug');
 
-let timer : Observable<number> = Observable.timer(0,5000);
+let runTimer : Observable<number> = timer(0,5000);
 
 let poc : PortsOfCall = PortsOfCall.Instance;
 poc.start();
 
-let sub : Subscription = timer.subscribe((t)=>{
+let sub : Subscription = runTimer.subscribe((t)=>{
    Logger.info("Timer : %s",poc.status());
 
    let gps : GpsDevice = poc.firstDevice(SerialDeviceType.GPS) as GpsDevice;

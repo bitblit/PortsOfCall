@@ -2,9 +2,8 @@
 import {Logger} from "@bitblit/ratchet/dist/common/logger";
 import * as serialport from "serialport";
 import {SerialDevice} from "../model/serial-device";
-import {Observable} from "rxjs/Rx";
+import {Observable, Subscription} from "rxjs";
 import {SerialDeviceState} from "../model/serial-device-state";
-import {Subscription} from "rxjs/Subscription";
 import {SerialDeviceType} from "../model/serial-device-type";
 
 export class AbstractSerialDevice implements SerialDevice{
