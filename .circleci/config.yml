@@ -8,7 +8,7 @@ defaults: &defaults
     CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
 
   docker:
-    - image: circleci/node:8.11.1
+    - image: circleci/node:8.12.0
 
 version: 2
 jobs:
