@@ -45,11 +45,11 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@bitblit/ratchet": "0.0.122",
-    "serialport": "7.1.0",
+    "@bitblit/ratchet": "0.0.149",
+    "serialport": "7.1.4",
     "gps": "0.4.7",
-    "rxjs": "6.3.3",
-    "moment": "2.23.0",
+    "rxjs": "6.4.0",
+    "moment": "2.24.0",
     "moment-timezone": "0.5.23"
   },
   "devDependencies": {
