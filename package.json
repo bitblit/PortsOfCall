@@ -24,6 +24,7 @@
     "clean": "rm -Rf dist",
     "clean-win": "if exist dist rmdir /q /s dist",
     "test": "mocha -r ts-node/register test/**/*.ts",
+    "apply-circle": "node node_modules/@bitblit/ratchet/dist/circleci/apply-circle-ci-env-variables-to-files src/static/build-properties.json",
     "cli": "yarn run compile && node dist/cli",
     "cli-win": "yarn run compile-win && node dist/cli"
   },
