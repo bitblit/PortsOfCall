@@ -46,9 +46,9 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@bitblit/ratchet": "0.3.5",
-    "serialport": "8.0.0",
+    "serialport": "7.1.5",
     "gps": "0.5.3",
-    "rxjs": "6.4.0",
+    "rxjs": "6.5.2",
     "moment": "2.24.0",
     "moment-timezone": "0.5.26"
   },
