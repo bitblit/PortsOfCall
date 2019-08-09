@@ -37,6 +37,11 @@ To run the tests that ARE in here,
 
 `npm test`
 
+# Release Notes
+The 0.x.x branches are built on Node 8.11.1.  
+The 0.1.x branches are built on Node 8.12.0.
+The 0.2.x branches are built on Node 10.x
+
 
 # Deployment
 

@@ -5,7 +5,6 @@ import {AbstractSerialDevice} from "../abstract-serial-device";
 import * as GPS from 'gps';
 import {SerialDeviceType} from "../../model/serial-device-type";
 import {SerialDeviceState} from "../../model/serial-device-state";
-import {GpsState} from "./gps-state";
 import {ExtGpsState} from './ext-gps-state';
 import moment = require('moment');
 import {GPSState} from 'gps';
@@ -33,7 +32,7 @@ export class GpsDevice extends AbstractSerialDevice{
     {
         if (this.currentState()==SerialDeviceState.OK)
         {
-            const state: GpsState = this.currentGpsState();
+            const state: GPSState = this.currentGpsState();
             return "GPS TE:"+this.timeError+"ms Location : "+state.lat + " x "+state.lon+")";
         }
         else
@@ -73,7 +72,6 @@ export class GpsDevice extends AbstractSerialDevice{
 
     currentGpsState(includeInvalid: boolean = false) : ExtGpsState
     {
-        const curState: GPSState = this.gps.state;
         const temp: ExtGpsState = (this.currentState()==SerialDeviceState.OK)?this.gps.state as ExtGpsState:null;
         try {
             if (temp && temp.time) {
