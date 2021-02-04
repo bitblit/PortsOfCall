@@ -1,12 +1,12 @@
 //    Wraps up reading any gps data
-import {Observable} from "rxjs";
-import * as serialport from "serialport";
-import {SerialDevice} from "./model/serial-device";
-import {GpsDevice} from "./devices/gps/gps-device";
-import {Obd2Device} from "./devices/obd/obd2-device";
-import {Subscription, timer} from "rxjs";
-import {SerialDeviceState} from "./model/serial-device-state";
-import {SerialDeviceType} from "./model/serial-device-type";
+import {Observable} from 'rxjs';
+import * as serialport from 'serialport';
+import {SerialDevice} from './model/serial-device';
+import {GpsDevice} from './devices/gps/gps-device';
+import {Obd2Device} from './devices/obd/obd2-device';
+import {Subscription, timer} from 'rxjs';
+import {SerialDeviceState} from './model/serial-device-state';
+import {SerialDeviceType} from './model/serial-device-type';
 import {Logger} from '@bitblit/ratchet/dist/common/logger';
 import {LogSnapshot} from '@bitblit/ratchet/dist/common/log-snapshot';
 
@@ -27,7 +27,7 @@ export class PortsOfCall {
     private latestPortList: string[] = null;
 
     private constructor() {
-        Logger.info("Created PortsOfCall");
+        Logger.info('Created PortsOfCall');
 
         this.checkupTimer = timer(0, PortsOfCall.DEFAULT_CHECKUP_RATE);
         this.checkupSubscription = this.checkupTimer.subscribe(t => {
@@ -60,14 +60,14 @@ export class PortsOfCall {
 
     public start() : PortsOfCall
     {
-        Logger.info("Starting Ports-Of-Call ping");
+        Logger.info('Starting Ports-Of-Call ping');
         this.paused = false;
         return this;
     }
 
     public pause() : PortsOfCall
     {
-        Logger.info("Pausing Ports-Of-Call ping");
+        Logger.info('Pausing Ports-Of-Call ping');
         this.paused = true;
         return this;
     }
@@ -75,11 +75,11 @@ export class PortsOfCall {
 
     public abort() : void
     {
-        Logger.info("Aborting ports of call");
+        Logger.info('Aborting ports of call');
         this.checkupSubscription.unsubscribe();
         this.pingSubscription.unsubscribe();
 
-        Logger.info("Shutting down all ports");
+        Logger.info('Shutting down all ports');
         Object.keys(this.portsInUse).forEach(k=>{
             this.portsInUse[k].cleanShutdown();
         });
@@ -91,13 +91,13 @@ export class PortsOfCall {
         const portCount: number = (this.latestPortList)?this.latestPortList.length:-1;
 
         let rval : string = new Date().toLocaleTimeString();
-        rval += (this.paused)? " PAUSED" : " RUNNING";
-        rval += " Bound "+activeDevices.length+" of "+portCount+" ports";
+        rval += (this.paused)? ' PAUSED' : ' RUNNING';
+        rval += ' Bound '+activeDevices.length+' of '+portCount+' ports';
 
         if (activeDevices.length>0) {
-            rval += " : Devices : ";
+            rval += ' : Devices : ';
             activeDevices.forEach(d=>{
-                rval += (includeSummary) ? "\n\n"+d.summary() : " "+d.deviceType();
+                rval += (includeSummary) ? '\n\n'+d.summary() : ' '+d.deviceType();
             });
         }
 
@@ -109,12 +109,12 @@ export class PortsOfCall {
     {
         this.lastCheckup = new Date();
 
-        Logger.info("Searching for serial ports");
+        Logger.info('Searching for serial ports');
 
         this.listSerialPorts().then(ports=>{
             Logger.info('Found %d serial ports', ports.length);
                 if (ports.length == 0) {
-                    Logger.info("No serial ports found");
+                    Logger.info('No serial ports found');
                     return null;
                 }
                 else {
@@ -123,18 +123,18 @@ export class PortsOfCall {
                         return (!current || this.deadState(current.currentState()));
                     })
 
-                    Logger.info("Checking %d ports", portsToCheck.length);
+                    Logger.info('Checking %d ports', portsToCheck.length);
 
                     portsToCheck.forEach(p => {
                         let current: SerialDevice = this.portsInUse[p];
-                        Logger.debug("Replacing device on %s (was %s)", p, current);
+                        Logger.debug('Replacing device on %s (was %s)', p, current);
                         let testDevice = this.createDeviceInstanceToTest(current);
                         testDevice.initialize(p, this.pingTimer);
                         this.portsInUse[p] = testDevice;
                     });
                 }
         }).catch(err=>{
-            Logger.warn("Outer err : %s",err);
+            Logger.warn('Outer err : %s',err);
         });
     }
 
@@ -172,7 +172,7 @@ export class PortsOfCall {
             }
             if (!rval)
             {
-                Logger.warn("Should not happen - search did not find anything");
+                Logger.warn('Should not happen - search did not find anything');
                 rval = devices[0];
             }
         }
@@ -218,7 +218,7 @@ export class PortsOfCall {
     {
         if (typeFilter==null)
         {
-            throw "You must set a type filter";
+            throw 'You must set a type filter';
         }
         let devices : SerialDevice[] = this.devices(typeFilter);
 

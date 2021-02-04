@@ -1,9 +1,9 @@
 //    Wraps up reading any gps data
-import {Logger} from "@bitblit/ratchet/dist/common/logger";
-import * as serialport from "serialport";
-import {Observable} from "rxjs";
-import {SerialDeviceState} from "./serial-device-state";
-import {SerialDeviceType} from "./serial-device-type";
+import {Logger} from '@bitblit/ratchet/dist/common/logger';
+import * as serialport from 'serialport';
+import {Observable} from 'rxjs';
+import {SerialDeviceState} from './serial-device-state';
+import {SerialDeviceType} from './serial-device-type';
 
 export interface SerialDevice {
 

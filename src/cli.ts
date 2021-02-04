@@ -7,6 +7,7 @@ import {EchoDevice} from './devices/echo/echo-device';
 import {SerialDeviceType} from './model/serial-device-type';
 import {GpsDevice} from './devices/gps/gps-device';
 import {Obd2Device} from './devices/obd/obd2-device';
+import {BachinTA4} from './devices/gcode/bachin-t-a4';
 
 process.env['DEBUG'] = 'serialport:main node myapp.js';
 
@@ -18,38 +19,45 @@ let poc : PortsOfCall = PortsOfCall.Instance;
 poc.start();
 
 let sub : Subscription = runTimer.subscribe((t)=>{
-   Logger.info("Timer : %s",poc.status());
+   Logger.info('Timer : %s',poc.status());
 
    let gps : GpsDevice = poc.firstDevice(SerialDeviceType.GPS) as GpsDevice;
    if (gps) {
-       Logger.info("GPS Device reports : %j",gps.currentGpsState());
+       Logger.info('GPS Device reports : %j',gps.currentGpsState());
    }
 
     let obd2 : Obd2Device = poc.firstDevice(SerialDeviceType.OBD2) as Obd2Device;
     if (obd2) {
-        Logger.info("OBD2 Device reports : %j",obd2.vehicleState());
+        Logger.info('OBD2 Device reports : %j',obd2.vehicleState());
     }
 
     let echo : EchoDevice = poc.firstDevice(SerialDeviceType.ECHO) as EchoDevice;
    if (echo)
    {
-       Logger.info("Sending timer %d as echo",t);
+       Logger.info('Sending timer %d as echo',t);
        echo.sendLine('Timer '+t);
    }
+
+    let bachin : BachinTA4 = poc.firstDevice(SerialDeviceType.BACHINTA4) as BachinTA4;
+    if (echo)
+    {
+        Logger.info('Sending timer %d as echo',t);
+        echo.sendLine('Timer '+t);
+    }
 
 });
 
 process.stdin.on('data', function(chunk){
-   Logger.info("Got stdin : "+chunk);
+   Logger.info('Got stdin : '+chunk);
    sub.unsubscribe();
    poc.abort();
-   Logger.info("Calling process.exit");
+   Logger.info('Calling process.exit');
    process.exit(0);
-    Logger.info("Called process.exit");
+    Logger.info('Called process.exit');
 });
 
 process.on('SIGINT', function() {
-    console.log( "\nGracefully shutting down from SIGINT (Ctrl-C)" );
+    console.log( '\nGracefully shutting down from SIGINT (Ctrl-C)' );
     // some other closing procedures go here
     sub.unsubscribe();
     poc.abort();

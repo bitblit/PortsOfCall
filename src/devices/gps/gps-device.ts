@@ -1,10 +1,10 @@
 //    Wraps up reading any gps data
-import {Logger} from "@bitblit/ratchet/dist/common/logger";
-import * as serialport from "serialport";
-import {AbstractSerialDevice} from "../abstract-serial-device";
+import {Logger} from '@bitblit/ratchet/dist/common/logger';
+import * as serialport from 'serialport';
+import {AbstractSerialDevice} from '../abstract-serial-device';
 import * as GPS from 'gps';
-import {SerialDeviceType} from "../../model/serial-device-type";
-import {SerialDeviceState} from "../../model/serial-device-state";
+import {SerialDeviceType} from '../../model/serial-device-type';
+import {SerialDeviceState} from '../../model/serial-device-state';
 import {ExtGpsState} from './ext-gps-state';
 import moment = require('moment');
 import {GPSState} from 'gps';
@@ -33,18 +33,18 @@ export class GpsDevice extends AbstractSerialDevice{
         if (this.currentState()==SerialDeviceState.OK)
         {
             const state: GPSState = this.currentGpsState();
-            return "GPS TE:"+this.timeError+"ms Location : "+state.lat + " x "+state.lon+")";
+            return 'GPS TE:'+this.timeError+'ms Location : '+state.lat + ' x '+state.lon+')';
         }
         else
         {
-            return new Date()+" : "+this.currentState()+" : GPS";
+            return new Date()+' : '+this.currentState()+' : GPS';
         }
 
     }
 
     handleGPSData(data)
     {
-        Logger.silly("Received GPS data>%j %j",data, this.gps.state);
+        Logger.silly('Received GPS data>%j %j',data, this.gps.state);
         super.onData(data);
         this.lastUpdate = new Date();
         this.timeError = (this.gps.state.time)?this.lastUpdate.getTime()-this.gps.state.time.getTime():null;

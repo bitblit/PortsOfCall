@@ -8,7 +8,7 @@ A computer may have multiple devices attached to it through serial ports, but we
 are, and wo which ports they are connected.  Moreover, which port they are on can change over time.  PortsOfCall
 combines an architecture for searching the various attached ports, trying to detect what device is attached to
 them, with wrappers that can then be attached to the port and used as abstractions for the device itself.  While
-I mean for it to have a plugin architecture, the main devices I mean to support out of the box are GPS units
+I mean it to have a plugin architecture, the main devices I mean to support out of the box are GPS units
 and OBD-II devices for cars.
 
 ## Installation
@@ -25,7 +25,6 @@ This library depends on the following libraries:
 * Serialport - I really hope its obvious why I depend on this
 * GPS - For processing data coming in from the gps device
 * Ratchet - I depend on my own Ratchet library for various utility functions
-* Winston - because I always need logging
 * Moment - because I always need better date handling than what comes with Javascript
 * Moment-Timezone - because I always need timezone specific handling of date
 * RXJS - I use observable timers for periodic reconnection, as well as for wrapping some things in observables
@@ -41,7 +40,7 @@ To run the tests that ARE in here,
 The 0.x.x branches are built on Node 8.11.1.  
 The 0.1.x branches are built on Node 8.12.0.
 The 0.2.x branches are built on Node 10.x
-
+The 0.3.x branches are build on Node 12.x
 
 # Deployment
 

@@ -1,10 +1,10 @@
 //    Wraps up reading any gps data
-import {Logger} from "@bitblit/ratchet/dist/common/logger";
-import * as serialport from "serialport";
-import {SerialDevice} from "../model/serial-device";
-import {Observable, Subscription} from "rxjs";
-import {SerialDeviceState} from "../model/serial-device-state";
-import {SerialDeviceType} from "../model/serial-device-type";
+import {Logger} from '@bitblit/ratchet/dist/common/logger';
+import * as serialport from 'serialport';
+import {SerialDevice} from '../model/serial-device';
+import {Observable, Subscription} from 'rxjs';
+import {SerialDeviceState} from '../model/serial-device-state';
+import {SerialDeviceType} from '../model/serial-device-type';
 
 export class AbstractSerialDevice implements SerialDevice{
     private port: any;
@@ -19,7 +19,7 @@ export class AbstractSerialDevice implements SerialDevice{
 
     summary() : string
     {
-        return new Date()+" : "+this.currentState()+" : AbstractSerialDevice";
+        return new Date()+' : '+this.currentState()+' : AbstractSerialDevice';
     }
 
     currentState() : SerialDeviceState
@@ -28,14 +28,14 @@ export class AbstractSerialDevice implements SerialDevice{
     }
 
     cleanShutdown() : void {
-        Logger.debug("Performing clean shutdown of port %s",this.portName());
+        Logger.debug('Performing clean shutdown of port %s',this.portName());
         //debugger;
         try {
             this.port.close();
         }
         catch (err)
         {
-            Logger.warn("Error closing port %s : %s",this.portName,err);
+            Logger.warn('Error closing port %s : %s',this.portName,err);
         }
         if (this.pingSubscription)
         {
@@ -62,7 +62,7 @@ export class AbstractSerialDevice implements SerialDevice{
     }
 
     updateState(tick:number) : void {
-        Logger.silly("Updating state, cur: %s, tick: %d",this.myState, tick);
+        Logger.silly('Updating state, cur: %s, tick: %d',this.myState, tick);
         this.onTick(tick);
         let now : number = new Date().getTime();
         switch (this.myState)
@@ -75,31 +75,31 @@ export class AbstractSerialDevice implements SerialDevice{
                 }
                 else if (now-this.timeStarted>5000)
                 {
-                    Logger.debug("Gave up waiting for %s",this.portName());
+                    Logger.debug('Gave up waiting for %s',this.portName());
                     this.myState = SerialDeviceState.FAIL;
                     this.cleanShutdown();
                 }
                 else
                 {
-                    Logger.silly("Still waiting for open");
+                    Logger.silly('Still waiting for open');
                 }
                 break;
             case SerialDeviceState.TESTING :
                 if (this.deviceMatchesPort())
                 {
-                    Logger.info("Acquired device of type "+this.deviceType()+" on port "+this.portName());
+                    Logger.info('Acquired device of type '+this.deviceType()+' on port '+this.portName());
                     this.okStarted = new Date().getTime();
                     this.myState = SerialDeviceState.OK;
                 }
                 else if (now-this.testingStarted>5000)
                 {
-                    Logger.debug("Gave up waiting on test for %s",this.portName());
+                    Logger.debug('Gave up waiting on test for %s',this.portName());
                     this.myState = SerialDeviceState.FAIL;
                     this.cleanShutdown();
                 }
                 else
                 {
-                    Logger.silly("Still waiting on test");
+                    Logger.silly('Still waiting on test');
                 }
                 break;
             case SerialDeviceState.FAIL: break; // this is an end state
@@ -108,12 +108,12 @@ export class AbstractSerialDevice implements SerialDevice{
             case SerialDeviceState.OK:
                 if (this.deviceIsStalled())
                 {
-                    Logger.warn("Device %s is stalled - closing up", this.portName());
+                    Logger.warn('Device %s is stalled - closing up', this.portName());
                     this.cleanShutdown();
                     this.myState = SerialDeviceState.STALLED;
                 }
                 break;
-            default : Logger.warn("Unrecognized state : %s",this.myState);
+            default : Logger.warn('Unrecognized state : %s',this.myState);
         }
     }
 
@@ -153,14 +153,14 @@ export class AbstractSerialDevice implements SerialDevice{
 
         if (this.parser)
         {
-            Logger.debug("Using parser : %j",this.parser);
+            Logger.debug('Using parser : %j',this.parser);
             // Open up the port and wire the callbacks
             this.port.pipe(this.parser);
             this.parser.on('data', (data) => this.onData(data));
         }
         else
         {
-            Logger.info("Using raw data");
+            Logger.info('Using raw data');
             this.port.on('data',(data)=>this.onData(data));
         }
 
@@ -171,13 +171,13 @@ export class AbstractSerialDevice implements SerialDevice{
 
     private __startTesting()
     {
-        Logger.debug("Port opened : %s, starting testing",this.portName());
+        Logger.debug('Port opened : %s, starting testing',this.portName());
         this.testingStarted = new Date().getTime();
         this.myState = SerialDeviceState.TESTING;
     }
 
     onOpen(): any {
-        Logger.info("%s:Open:%s", this.deviceType(),this.portName());
+        Logger.info('%s:Open:%s', this.deviceType(),this.portName());
         if (this.myState==SerialDeviceState.OPENING)
         {
             this.__startTesting();
@@ -185,20 +185,20 @@ export class AbstractSerialDevice implements SerialDevice{
     }
 
     onData(data: any): any {
-        Logger.silly("%s:Data:%s", this.deviceType(), data);
+        Logger.silly('%s:Data:%s', this.deviceType(), data);
     }
 
     onClose(): any {
-        Logger.info("%s:Close:%s", this.deviceType(), this.portName());
+        Logger.info('%s:Close:%s', this.deviceType(), this.portName());
     }
 
     onError(error: any): any {
         this.lastError = error;
-        Logger.info("%s:Error:%s:%s",this.deviceType(),this.portName(),error);
+        Logger.info('%s:Error:%s:%s',this.deviceType(),this.portName(),error);
 
         if (this.myState==SerialDeviceState.OPENING)
         {
-            Logger.debug("Error while opening : %s : giving up",this.portName());
+            Logger.debug('Error while opening : %s : giving up',this.portName());
             this.myState = SerialDeviceState.FAIL;
             this.cleanShutdown();
         }

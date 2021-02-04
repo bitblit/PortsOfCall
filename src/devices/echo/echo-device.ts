@@ -1,8 +1,8 @@
-import {Logger} from "@bitblit/ratchet/dist/common/logger";
-import * as serialport from "serialport";
-import {AbstractSerialDevice} from "../abstract-serial-device";
-import {SerialDeviceType} from "../../model/serial-device-type";
-import {SerialDeviceState} from "../../model/serial-device-state";
+import {Logger} from '@bitblit/ratchet/dist/common/logger';
+import * as serialport from 'serialport';
+import {AbstractSerialDevice} from '../abstract-serial-device';
+import {SerialDeviceType} from '../../model/serial-device-type';
+import {SerialDeviceState} from '../../model/serial-device-state';
 
 export class EchoDevice extends AbstractSerialDevice{
     public static FLAG_TEXT : string='THIS IS A TEST';
@@ -24,11 +24,11 @@ export class EchoDevice extends AbstractSerialDevice{
     {
         if (this.currentState()==SerialDeviceState.OK)
         {
-            return "Echo, last value was : "+this.last;
+            return 'Echo, last value was : '+this.last;
         }
         else
         {
-            return new Date()+" : "+this.last;
+            return new Date()+' : '+this.last;
         }
 
     }
@@ -54,17 +54,17 @@ export class EchoDevice extends AbstractSerialDevice{
             // When new, I'm only looking for one piece of text
             if (data=='Echo:'+EchoDevice.FLAG_TEXT)
             {
-                Logger.info("TEST DATA RECEIVED");
+                Logger.info('TEST DATA RECEIVED');
                 this.echoState='WAITING_FOR_INPUT';
             }
             else
             {
-                Logger.debug("Ignoring data %s - may not be a echo device",data);
+                Logger.debug('Ignoring data %s - may not be a echo device',data);
             }
         }
         else
         {
-            Logger.info("%s:Data:%s", this.deviceType(), data);
+            Logger.info('%s:Data:%s', this.deviceType(), data);
             this.last = data;
         }
     }
@@ -75,7 +75,7 @@ export class EchoDevice extends AbstractSerialDevice{
         {
             if (this.echoState=='NEW')
             {
-                Logger.debug("a-Ontick : %d %s",tick,this.portName());
+                Logger.debug('a-Ontick : %d %s',tick,this.portName());
                 this.sendLine(EchoDevice.FLAG_TEXT);
             }
 
@@ -84,7 +84,7 @@ export class EchoDevice extends AbstractSerialDevice{
 
     sendLine(data:string)
     {
-        this.getPort().write(data+"\n");
+        this.getPort().write(data+'\n');
     }
 
 }
