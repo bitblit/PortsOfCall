@@ -6,4 +6,4 @@ dist
 cw-test.ts
 typings
 *.bak
-
+cli2.ts

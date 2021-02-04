@@ -3,11 +3,11 @@ import serialport from 'serialport';
 import { AbstractSerialDevice } from '../abstract-serial-device';
 import { SerialDeviceType } from '../../model/serial-device-type';
 import { SerialDeviceState } from '../../model/serial-device-state';
+import { StringRatchet } from '@bitblit/ratchet/dist/common/string-ratchet';
 
-export class EchoDevice extends AbstractSerialDevice {
-  public static FLAG_TEXT: string = 'THIS IS A TEST';
-  private last: string;
-  private echoState: string = 'NEW';
+export class BachinTA4 extends AbstractSerialDevice {
+  private lastSent: string; // Last data sent
+  private last: string; // Last data received
 
   constructor() {
     super();
@@ -21,18 +21,20 @@ export class EchoDevice extends AbstractSerialDevice {
 
   summary(): string {
     if (this.currentState() == SerialDeviceState.OK) {
-      return 'Echo, last value was : ' + this.last;
+      return 'BachinTA4, last value was : ' + this.last;
     } else {
       return new Date() + ' : ' + this.last;
     }
   }
 
   deviceType(): SerialDeviceType {
-    return SerialDeviceType.ECHO;
+    return SerialDeviceType.BACHINTA4;
   }
 
   deviceMatchesPort(): boolean {
-    return this.echoState != 'NEW';
+    Logger.info('Called deviceMatchesPort');
+    return false;
+    // return this.echoState!='NEW';
   }
 
   deviceIsStalled(): boolean {
@@ -40,31 +42,21 @@ export class EchoDevice extends AbstractSerialDevice {
   }
 
   onData(inData: string): any {
-    const data: string = inData.trim();
-    if (this.echoState == 'NEW') {
-      // When new, I'm only looking for one piece of text
-      if (data == 'Echo:' + EchoDevice.FLAG_TEXT) {
-        Logger.info('TEST DATA RECEIVED');
-        this.echoState = 'WAITING_FOR_INPUT';
-      } else {
-        Logger.debug('Ignoring data %s - may not be a echo device', data);
-      }
-    } else {
-      Logger.info('%s:Data:%s', this.deviceType(), data);
-      this.last = data;
+    const data: string = StringRatchet.trimToNull(inData);
+    if (!!data) {
+      Logger.debug('Got data %s', data);
     }
   }
 
   onTick(tick: number): void {
     if (tick % 5 == 0) {
-      if (this.echoState == 'NEW') {
-        Logger.debug('a-Ontick : %d %s', tick, this.portName());
-        this.sendLine(EchoDevice.FLAG_TEXT);
-      }
+      Logger.debug('Tick  %d %s', tick, this.portName());
     }
   }
 
   sendLine(data: string) {
+    Logger.debug('Sending %s', data);
+    this.lastSent = data;
     this.getPort().write(data + '\n');
   }
 }
