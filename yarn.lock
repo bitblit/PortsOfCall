@@ -1695,14 +1695,10 @@ minimatch@3.0.4, minimatch@^3.0.4:
   dependencies:
     brace-expansion "^1.1.7"
 
-minimist@^1.2.0:
-  version "1.2.0"
-  resolved "http://registry.npmjs.org/minimist/-/minimist-1.2.0.tgz#a35008b20f41383eec1fb914f4cd5df79a264284"
-
-minimist@^1.2.3:
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
-  integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
+minimist@^1.2.0, minimist@^1.2.3:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.6.tgz#8637a5b759ea0d6e98702cfb3a9283323c93af44"
+  integrity sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==
 
 mkdirp-classic@^0.5.2, mkdirp-classic@^0.5.3:
   version "0.5.3"
@@ -2182,7 +2178,7 @@ read-pkg@^2.0.0:
 
 readable-stream@^2.0.6, readable-stream@^2.3.5:
   version "2.3.6"
-  resolved "http://registry.npmjs.org/readable-stream/-/readable-stream-2.3.6.tgz#b11c27d88b8ff1fbe070643cf94b0c79ae1b0aaf"
+  resolved "https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.6.tgz#b11c27d88b8ff1fbe070643cf94b0c79ae1b0aaf"
   dependencies:
     core-util-is "~1.0.0"
     inherits "~2.0.3"
@@ -2445,7 +2441,7 @@ spdx-license-ids@^3.0.0:
 
 sprintf-js@~1.0.2:
   version "1.0.3"
-  resolved "http://registry.npmjs.org/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
+  resolved "https://registry.npmjs.org/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
 
 string-width@^1.0.1:
   version "1.0.2"
