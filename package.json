@@ -63,7 +63,7 @@
     "gps": "0.6.0",
     "moment": "2.29.1",
     "moment-timezone": "0.5.32",
-    "rxjs": "6.6.3",
+    "rxjs": "^7.5.5",
     "serialport": "9.0.6"
   },
   "devDependencies": {
