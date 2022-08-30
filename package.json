@@ -62,7 +62,7 @@
     "@bitblit/ratchet": "0.11.4",
     "gps": "0.6.0",
     "moment": "2.29.1",
-    "moment-timezone": "0.5.32",
+    "moment-timezone": "0.5.35",
     "rxjs": "6.6.3",
     "serialport": "9.0.6"
   },
